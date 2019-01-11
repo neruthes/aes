@@ -201,7 +201,7 @@
 			<script>
 			try {
 				if (localStorage[localStorageKeyForPasscode]) {
-					document.getElementById('userinputkey').value = Number(localStorage[localStorageKeyForPasscode]);
+					document.getElementById('userinputkey').value = localStorage[localStorageKeyForPasscode];
 				}
 			} catch (e) {
 
@@ -209,6 +209,13 @@
 
 			}
 			</script>
+		</div>
+		<div class="content" id="useroptions-container">
+			<h2><label for="userinputkey">Options</label></h2>
+			<input type="checkbox" id="useroption--attachTimestamp" checked></input>
+			<label for="useroption--attachTimestamp">
+				Attach Timestamp
+			</label>
 		</div>
 		<div class="content" id="useractions-container">
 			<button type="button" id="btn-encrypt">Encrypt</button>
@@ -254,7 +261,12 @@
 	document.getElementById('useroutputtext').addEventListener('click', taEncodedFocusEventHandler);
 
 	document.getElementById('btn-encrypt').addEventListener('click', function () {
-		document.getElementById('useroutputtext').value = '==== Encrypted with https://joyneop.xyz/aes/ ====\n\n' + encrypt(document.getElementById('userinputtext').value, document.getElementById('userinputkey').value);
+		document.getElementById('useroutputtext').value = '==== Encrypted with https://joyneop.xyz/aes/ ====\n\n' + encrypt(
+			(
+				document.getElementById('useroption--attachTimestamp').value === 'on' ? ((new Date()).toString() + '\n\n') : ''
+			) + document.getElementById('userinputtext').value,
+			document.getElementById('userinputkey').value
+		);
 	});
 	document.getElementById('btn-decrypt').addEventListener('click', function () {
 		document.getElementById('useroutputtext').value = decrypt(document.getElementById('userinputtext').value.replace(/^====.+?\n/g, '').trim(), document.getElementById('userinputkey').value);
